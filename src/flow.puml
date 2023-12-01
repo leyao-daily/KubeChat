@@ -1,0 +1,42 @@
+@startuml AIGC
+
+participant "User Interface" as UI
+participant "Input Handler" as IH
+participant "Memory Manager" as MM
+participant "Embedding Service" as EM
+participant "Prompt Service" as PS
+participant "LLM Service" as LLM
+participant "Vector DB" as VDB
+participant "Database" as DB
+
+note over VDB: Faiss/Milvus/Pinecone
+
+UI -> IH : Knowledge document
+IH -> EM : Generate Embedding
+EM -> VDB : Store Embedding
+
+UI -> IH : User Input
+IH -> MM: Stroe Input
+MM -> VDB : Check for related history
+VDB -> MM : Related history
+MM -> IH : Context update (if any)
+
+alt With Knowledge
+IH -> EM : Get Embedding
+EM -> VDB : Retrieve related embedding using input context
+VDB -> EM : Related Embedding
+EM -> IH : Generate context with input and related Embedding
+end
+
+IH -> PS : Get Prompt Template
+PS -> DB : Retrieve Prompt Template
+DB -> PS : Prompt Template
+PS -> IH : Prompt Template
+
+IH -> LLM : Context and prompt template
+LLM -> LLM : Generate the response
+LLM -> IH : Response
+LLM -> VDB : Store New Response & Context
+IH -> UI : Output Response
+
+@enduml

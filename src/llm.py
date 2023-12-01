@@ -13,9 +13,9 @@ llm = LlamaCpp(
 @app.route('/process', methods=['POST'])
 def process():
     data = request.json
-    prompt = PromptTemplate(template=data['prompt'], input_variables=["context", "question"])
+    prompt = PromptTemplate(template=data['prompt'], input_variables=["question"])
     llm_chain = LLMChain(llm=llm, prompt=prompt)
-    response = llm_chain.run({"context": data['context'], "question": data['question']})
+    response = llm_chain.run({"question": data['question']})
     print(response)
     return jsonify({"response": response})
 

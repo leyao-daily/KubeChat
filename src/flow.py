@@ -43,8 +43,8 @@ def process_llm(prompt, context, question):
 
 # Example Usage
 file_path = "./example.txt"
-#question = "How is AI impacting healthcare and finance?"
-question = "What is AI?"
+question = "What does Cloud Native mean?"
+#question = "What is AI?"
 template_id = "template1"
 
 # Generate embeddings

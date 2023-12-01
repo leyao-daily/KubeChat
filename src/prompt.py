@@ -5,11 +5,9 @@ app = Flask(__name__)
 # In-memory storage for prompt templates
 prompt_templates = {
     "template1": {
-        "template": """Use the following pieces of context to answer the question at the end. If you don't know the answer, try to make up an answer.
+        "template": """This is a AI Chatbot, which can chat with you about what it knows.
 
-{context}
-
-Question: {question}
+Input: {input}
 Answer:""",
         "version": 1
     },
