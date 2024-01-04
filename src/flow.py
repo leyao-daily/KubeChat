@@ -67,7 +67,10 @@ def main():
             print("Prompt template not found.")
             continue
 
-        answer = process_llm(prompt_template, "", question)
+        knowledge = search_embeddings(question)
+        print("Knowledge:", knowledge)
+
+        answer = process_llm(prompt_template, knowledge, question)
         if answer:
             print("LLM Service Answer:", answer)
         else:

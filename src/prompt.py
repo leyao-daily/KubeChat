@@ -11,6 +11,13 @@ Input: {input}
 Answer:""",
         "version": 1
     },
+    "template2": {
+        "template": """Use the following pieces of context to answer the question at the end.
+{context}
+question: {question}
+answer:""",
+        "version": 1
+    },
     # Additional templates...
 }
 

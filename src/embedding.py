@@ -1,8 +1,8 @@
 from flask import Flask, request, jsonify
 from langchain.embeddings import LlamaCppEmbeddings
 from langchain.vectorstores import Chroma
-from langchain.document_loaders import TextLoader
-from langchain.text_splitter import CharacterTextSplitter
+from langchain.document_loaders import TextLoader, DirectoryLoader, PyPDFLoader
+from langchain.text_splitter import CharacterTextSplitter, RecursiveCharacterTextSplitter
 
 app = Flask(__name__)
 embeddings_model = LlamaCppEmbeddings(model_path="./model/llama-2-7b-chat.Q8_0.gguf")
@@ -17,17 +17,22 @@ def generate_embeddings():
         return jsonify({"error": "No file path provided"}), 400
 
     try:
-        with open(file_path, 'r') as file:
-            content = file.read()
+        # with open(file_path, 'r') as file:
+            # content = file.read()
 
-        loader = TextLoader(file_path)
-        docs = loader.load()
-        splitter = CharacterTextSplitter(chunk_size=100, chunk_overlap=0)
-        text = splitter.split_documents(docs)
-        chroma_db = Chroma.from_documents(text, embeddings_model) 
+        # loader = TextLoader(file_path)
+        # docs = loader.load()
+        # splitter = CharacterTextSplitter(chunk_size=100, chunk_overlap=0)
+        # text = splitter.split_documents(docs)
+        loader = PyPDFLoader(file_path).load()
+        splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=0)
+        #splitter = CharacterTextSplitter(chunk_size=1000, chunk_overlap=100)
+        text = splitter.split_documents(loader)
+        chroma_db = Chroma.from_documents(text, embeddings_model)
 
         return jsonify({"Success": True})
     except Exception as e:
+        print(e)
         return jsonify({"error": str(e)}), 500
 
 @app.route('/search', methods=['POST'])
@@ -41,6 +46,7 @@ def search():
         # Search in the vector database
         results = chroma_db.similarity_search(query, k=1)
         results = results[0].page_content
+        print(results)
     
         return jsonify({"results": results})
     except Exception as e:
