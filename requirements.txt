@@ -1,0 +1,7 @@
+chromadb
+torch
+transformers
+langchain
+llamacpp
+pypdf
+flask

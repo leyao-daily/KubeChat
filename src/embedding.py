@@ -25,7 +25,7 @@ def generate_embeddings():
         # splitter = CharacterTextSplitter(chunk_size=100, chunk_overlap=0)
         # text = splitter.split_documents(docs)
         loader = PyPDFLoader(file_path).load()
-        splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=0)
+        splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=100)
         #splitter = CharacterTextSplitter(chunk_size=1000, chunk_overlap=100)
         text = splitter.split_documents(loader)
         chroma_db = Chroma.from_documents(text, embeddings_model)
