@@ -2,6 +2,6 @@ chromadb
 torch
 transformers
 langchain
-llamacpp
+llama-cpp-python
 pypdf
 flask
