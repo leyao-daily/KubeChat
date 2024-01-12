@@ -41,3 +41,11 @@ python3 src/llm.py
 python3 src/flow.py
 
 # input pdf filename -> input template2 -> wait for embedding -> input question
+```
+
+## Contributor
+
+<!-- readme: contributors -start -->
+
+<!-- readme: contributors -end -->
+
