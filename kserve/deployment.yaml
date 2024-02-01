@@ -1,0 +1,19 @@
+apiVersion: "serving.kserve.io/v1beta1"
+kind: "InferenceService"
+metadata:
+  labels:
+    controller-tools.k8s.io: "1.0"
+  name: "llmserving"
+spec:
+  predictor:
+    containers:
+    - image: leyao/llmserving:v0.1
+      imagePullPolicy: IfNotPresent
+      resources:
+        requests:
+          memory: "40Gi"
+          cpu: "16"
+        limits:
+          memory: "40Gi"
+          cpu: "16"
+      

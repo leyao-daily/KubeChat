@@ -1,0 +1,4 @@
+transformers
+kserve
+ray[serve]
+

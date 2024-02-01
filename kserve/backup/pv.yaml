@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: llama-pv
+spec:
+  capacity:
+    storage: 15Gi  # Adjust the size to fit your needs
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: /root/KubeChat/kserve/llama-2-7b-chat-hf
+    type: Directory
+
