@@ -5,7 +5,7 @@ from kserve import Model, ModelServer
 
 from ray import serve
 
-@serve.deployment(name="llama-model", num_replicas=1)
+@serve.deployment(name="llama-model", num_replicas=1, ray_actor_options={"num_cpus": 10})
 class LLaMAModel(Model):
     def __init__(self):
         self.name = "llama-model"
@@ -27,7 +27,7 @@ class LLaMAModel(Model):
         input_text = data["instances"][0]["text"]
         input_ids = self.tokenizer.encode(input_text, return_tensors='pt')
         with torch.no_grad():
-            output = self.model.generate(input_ids, max_length=500)
+            output = self.model.generate(input_ids, max_length=50)
         response_text = self.tokenizer.decode(output[0], skip_special_tokens=True)
         return {"predictions": [response_text]}
 

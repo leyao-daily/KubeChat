@@ -7,13 +7,13 @@ metadata:
 spec:
   predictor:
     containers:
-    - image: leyao/llmserving:v0.1
+    - image: leyao/llmserving:v0.3
       imagePullPolicy: IfNotPresent
       resources:
         requests:
           memory: "40Gi"
-          cpu: "16"
+          cpu: "12"
         limits:
           memory: "40Gi"
-          cpu: "16"
+          cpu: "12"
       
