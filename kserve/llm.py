@@ -5,7 +5,18 @@ from kserve import Model, ModelServer
 
 from ray import serve
 
-@serve.deployment(name="llama-model", num_replicas=1, ray_actor_options={"num_cpus": 10})
+@serve.deployment(
+    name="llmserving", 
+    ray_actor_options={"num_cpus": 3},
+    max_concurrent_queries=3,
+    autoscaling_config={
+        "target_num_ongoing_requests_per_replica": 1,
+        "min_replicas": 0,
+        "initial_replicas": 0,
+        "max_replicas": 3,
+        "upscale_delay_s": 10,
+    },
+)
 class LLaMAModel(Model):
     def __init__(self):
         self.name = "llama-model"
@@ -32,4 +43,4 @@ class LLaMAModel(Model):
         return {"predictions": [response_text]}
 
 if __name__ == "__main__":
-    ModelServer().start({"llama-model": LLaMAModel})
+    ModelServer().start({"llmserving": LLaMAModel})
