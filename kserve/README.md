@@ -9,13 +9,13 @@
 
 Please first install the KServe
     
-    ```bash
-    # Install kserve
-    kubectl apply -f https://github.com/kserve/kserve/releases/download/v0.11.0/kserve.yaml
+```bash
+# Install kserve
+kubectl apply -f https://github.com/kserve/kserve/releases/download/v0.11.0/kserve.yaml
 
-    # Install kserve build-in cluster serving runtime (Optional)
-    kubectl apply -f https://github.com/kserve/kserve/releases/download/v0.11.0/kserve-runtimes.yaml
-    ```
+# Install kserve build-in cluster serving runtime (Optional)
+kubectl apply -f https://github.com/kserve/kserve/releases/download/v0.11.0/kserve-runtimes.yaml
+```
 
 
 ## Using the Files
@@ -27,7 +27,7 @@ This folder contains several files. Here's a brief description of what each file
 - `Dockerfile`: This file contains instructions for building a Docker image for the application.
 - `deployment.yaml`: This file contains the configuration for the kserve deployment.
 - `input.json`: This file contains the input data to test the llm inference
-- 'test.sh': This file contains the command to test the llm inference
+- `test.sh`: This file contains the command to test the llm inference
 
 To use a file, you can typically open it in your text editor or run it in your terminal, depending on the file type.
 
