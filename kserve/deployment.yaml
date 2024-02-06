@@ -6,14 +6,17 @@ metadata:
   name: "llmserving"
 spec:
   predictor:
+    scaleTarget: 2
+    scaleMetric: concurrency
+    containerConcurrency: 1
     containers:
-    - image: leyao/llmserving:v0.3
+    - image: leyao/llmserving:v0.2
       imagePullPolicy: IfNotPresent
       resources:
         requests:
-          memory: "90Gi"
-          cpu: "10"
+          memory: "30Gi"
+          cpu: "3"
         limits:
-          memory: "90Gi"
-          cpu: "10"
+          memory: "30Gi"
+          cpu: "3"
       
