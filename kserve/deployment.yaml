@@ -10,7 +10,7 @@ spec:
     scaleMetric: concurrency
     containerConcurrency: 1
     containers:
-    - image: leyao/llmserving:v0.2
+    - image: leyao/llmserving:v0.4
       imagePullPolicy: IfNotPresent
       resources:
         requests:
