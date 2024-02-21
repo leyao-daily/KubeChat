@@ -52,3 +52,23 @@ kubectl port-forward -n istio-system service/istio-ingressgateway 8080:80
 bash test.sh
 
 ```
+
+## Running locally (conda)
+
+```bash
+# Download and install the conda
+wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
+bash Miniconda3-latest-Linux-x86_64.sh
+
+# Create a env (kserve support python < 3.12)
+conda create -n llm python=3.11.7
+conda activate llm
+
+# Install dependencies
+pip install torch==2.2.0+cpu torchvision==0.17.0+cpu torchaudio==2.2.0+cpu --index-url https://download.pytorch.org/whl/cpu 
+
+pip install -r requirements.txt
+
+# Run locally
+
+python llm-local.py
