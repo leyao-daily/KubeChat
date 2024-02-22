@@ -1,4 +1,5 @@
 import torch
+import intel_extension_for_pytorch as ipex
 import json
 import time
 from transformers import AutoTokenizer, AutoModelForCausalLM
@@ -10,10 +11,10 @@ ray.init(dashboard_host="0.0.0.0")
 @serve.deployment(
     name="llmserving", 
     max_concurrent_queries=100,
-    graceful_shutdown_wait_loop_s=2,
-    graceful_shutdown_timeout_s=20,
-    health_check_period_s=10,
-    health_check_timeout_s=30,
+    graceful_shutdown_wait_loop_s=22,
+    graceful_shutdown_timeout_s=2000,
+    health_check_period_s=102,
+    health_check_timeout_s=302,
     ray_actor_options={
         "num_cpus": 10,
         "runtime_env": {
@@ -39,6 +40,9 @@ class LLaMAModel(Model):
         # Load the tokenizer and model here
         self.tokenizer = AutoTokenizer.from_pretrained(self.model_dir)
         self.model = AutoModelForCausalLM.from_pretrained(self.model_dir)
+        #self.model.eval()
+        self.model = self.model.to(memory_format=torch.channels_last)
+        self.model = ipex.optimize(self.model.eval(), dtype=torch.bfloat16)
 
     def predict(self, request, headers):
         # Check if request needs to be decoded from bytes
@@ -49,7 +53,7 @@ class LLaMAModel(Model):
 
         start_time = time.time()
 
-        with torch.no_grad():
+        with torch.no_grad(), torch.inference_mode(), torch.cpu.amp.autocast():
             output = self.model.generate(input_ids, max_length=100)
 
         end_time = time.time()
