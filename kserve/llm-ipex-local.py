@@ -2,7 +2,7 @@ import torch
 import intel_extension_for_pytorch as ipex
 import json
 import time
-from transformers import AutoTokenizer, AutoModelForCausalLM
+from transformers import AutoTokenizer, AutoModelForCausalLM, AutoConfig
 from kserve import Model, ModelServer
 import ray
 from ray import serve
@@ -11,10 +11,10 @@ ray.init(dashboard_host="0.0.0.0")
 @serve.deployment(
     name="llmserving", 
     max_concurrent_queries=100,
-    graceful_shutdown_wait_loop_s=22,
-    graceful_shutdown_timeout_s=2000,
-    health_check_period_s=102,
-    health_check_timeout_s=302,
+    graceful_shutdown_wait_loop_s=2,
+    graceful_shutdown_timeout_s=20,
+    health_check_period_s=10,
+    health_check_timeout_s=30,
     ray_actor_options={
         "num_cpus": 10,
         "runtime_env": {
@@ -38,11 +38,12 @@ class LLaMAModel(Model):
 
     def load(self):
         # Load the tokenizer and model here
+        self.config = AutoConfig.from_pretrained(self.model_dir)
         self.tokenizer = AutoTokenizer.from_pretrained(self.model_dir)
-        self.model = AutoModelForCausalLM.from_pretrained(self.model_dir)
-        #self.model.eval()
+        self.model = AutoModelForCausalLM.from_pretrained(self.model_dir, config=self.config)
+        self.model.eval()
         self.model = self.model.to(memory_format=torch.channels_last)
-        self.model = ipex.optimize(self.model.eval(), dtype=torch.bfloat16)
+        self.model = ipex.optimize(self.model, dtype=torch.bfloat16, inplace=True, deployment_mode=True)
 
     def predict(self, request, headers):
         # Check if request needs to be decoded from bytes
