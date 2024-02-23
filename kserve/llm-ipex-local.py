@@ -3,6 +3,8 @@ import intel_extension_for_pytorch as ipex
 import json
 import time
 from transformers import AutoTokenizer, AutoModelForCausalLM, AutoConfig
+#from intel_extension_for_transformers.transformers import AutoModelForCausalLM
+#from transformers import AutoTokenizer
 from kserve import Model, ModelServer
 import ray
 from ray import serve
@@ -38,12 +40,11 @@ class LLaMAModel(Model):
 
     def load(self):
         # Load the tokenizer and model here
-        self.config = AutoConfig.from_pretrained(self.model_dir)
         self.tokenizer = AutoTokenizer.from_pretrained(self.model_dir)
-        self.model = AutoModelForCausalLM.from_pretrained(self.model_dir, config=self.config)
+        self.model = AutoModelForCausalLM.from_pretrained(self.model_dir)
         self.model.eval()
         self.model = self.model.to(memory_format=torch.channels_last)
-        self.model = ipex.optimize(self.model, dtype=torch.bfloat16, inplace=True, deployment_mode=True)
+        self.model = ipex.llm.optimize(self.model, dtype=torch.bfloat16, inplace=True, deployment_mode=True)
 
     def predict(self, request, headers):
         # Check if request needs to be decoded from bytes
